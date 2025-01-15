@@ -1,9 +1,18 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
+    "start": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "prettier:fix": "prettier --write .",
+    "lint-prettier": "yarn lint:check && yarn prettier:check",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "src/**/*.ts": "yarn lint-prettier"
   },
   "keywords": [],
   "author": "",
