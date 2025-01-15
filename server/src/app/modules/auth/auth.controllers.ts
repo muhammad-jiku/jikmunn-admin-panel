@@ -28,7 +28,7 @@ const loginUserHandler = catchAsync(
         data: othersData,
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
@@ -54,7 +54,7 @@ const refreshTokenHandler = catchAsync(
         data: result,
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
@@ -73,7 +73,7 @@ const changePasswordHandler = catchAsync(
         message: 'Password changed successfully!',
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );

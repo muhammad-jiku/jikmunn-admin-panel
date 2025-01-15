@@ -14,31 +14,108 @@ datasource db {
 }
 
 // Models
-model User {
-  id                  Int           @id @default(autoincrement())
-  email               String        @unique
-  firstName           String
-  lastName            String?
-  contact             String?
-  accounts            String[]
-  password            String?
-  needsPasswordChange Boolean       @default(true)
-  passwordChangedAt   DateTime?
-  provider            String?
-  country             String?
-  currency            String        @default("USD")
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  accountsRel         Account[]
-  transactions        Transaction[]
+model Member {
+  id           String        @id @default(uuid())
+  memberId     String        @unique
+  firstName    String
+  lastName     String
+  middleName   String?
+  profileImage String?
+  email        String        @unique
+  contact      String        @unique
+  gender       Gender
+  provider     String?
+  country      String?
+  currency     String        @default("USD")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  accountsRel  Account[]
+  transactions Transaction[]
+  user         User?         @relation("MemberUser") // Define only the relation name here
 
+  @@map("tblmember")
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  adminId      String   @unique
+  firstName    String
+  lastName     String
+  middleName   String?
+  profileImage String?
+  email        String   @unique
+  contact      String   @unique
+  gender       Gender
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User?    @relation("AdminUser") // Define only the relation name here
+
+  @@map("tbladmin")
+}
+
+model Super_Admin {
+  id           String   @id @default(uuid())
+  superAdminId String   @unique
+  firstName    String
+  lastName     String
+  middleName   String?
+  profileImage String?
+  email        String   @unique
+  contact      String   @unique
+  gender       Gender
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User?    @relation("SuperAdminUser") // Define only the relation name here
+
+  @@map("tblsuperadmin")
+}
+
+model User {
+  id                  String       @id @default(uuid())
+  userId              String       @unique
+  role                UserRole
+  password            String
+  needsPasswordChange Boolean      @default(true)
+  passwordChangedAt   DateTime?
+  memberId            String?      @unique // Foreign key to Member
+  member              Member?      @relation("MemberUser", fields: [memberId], references: [memberId]) // Define fields and references only on this side
+  adminId             String?      @unique // Foreign key to Admin
+  admin               Admin?       @relation("AdminUser", fields: [adminId], references: [adminId]) // Define fields and references only on this side
+  superAdminId        String?      @unique // Foreign key to Super Admin
+  superAdmin          Super_Admin? @relation("SuperAdminUser", fields: [superAdminId], references: [superAdminId]) // Define fields and references only on this side
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  // Composite index to enforce one role per user
+  @@unique([memberId, adminId, superAdminId])
   @@map("tbluser")
 }
 
+// model User {
+//   id                  Int           @id @default(autoincrement())
+//   email               String        @unique
+//   firstName           String
+//   lastName            String?
+//   contact             String?
+//   accounts            String[]
+//   password            String?
+//   needsPasswordChange Boolean       @default(true)
+//   passwordChangedAt   DateTime?
+//   provider            String?
+//   country             String?
+//   currency            String        @default("USD")
+//   createdAt           DateTime      @default(now())
+//   updatedAt           DateTime      @updatedAt
+//   accountsRel         Account[]
+//   transactions        Transaction[]
+
+//   @@map("tbluser")
+// }
+
 model Account {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
+  id             String   @id @default(uuid())
+  memberId       String
+  member         Member   @relation(fields: [memberId], references: [id])
   accountName    String
   accountNumber  String
   accountBalance Float
@@ -49,16 +126,54 @@ model Account {
 }
 
 model Transaction {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  id          String            @id @default(uuid())
+  memberId    String
+  member      Member            @relation(fields: [memberId], references: [id])
   description String
-  status      String   @default("Pending")
+  status      TransactionStatus @default(PENDING) // Enum for status
   source      String
   amount      Float
-  type        String   @default("income")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  type        TransactionType   @default(INCOME) // Enum for type
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   @@map("tbltransaction")
+}
+
+// Enums
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum Months {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
 }

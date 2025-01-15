@@ -6,12 +6,13 @@ export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
 }
 
-export async function isUserExist(id: number) {
+export async function isUserExist(id: string) {
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { userId: id },
     select: {
       id: true,
-      email: true,
+      userId: true,
+      role: true,
       password: true,
       needsPasswordChange: true,
     },

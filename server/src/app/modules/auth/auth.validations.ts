@@ -3,7 +3,7 @@ import { z } from 'zod';
 const loginUserHandler = z.object({
   body: z
     .object({
-      id: z.number({
+      id: z.string({
         required_error: 'User id is required',
       }),
       password: z.string({

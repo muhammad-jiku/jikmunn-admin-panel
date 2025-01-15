@@ -23,26 +23,23 @@ const loginUserHandler = async (
   }
 
   console.log('user information available ', user.password, password);
-  const isPasswordValid = await isPasswordMatch(
-    password,
-    user.password as string
-  );
+  const isPasswordValid = await isPasswordMatch(password, user.password);
   console.log(isPasswordValid);
   if (!isPasswordValid) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password mismatch!');
   }
 
-  const { id: userId, email, needsPasswordChange } = user;
+  const { userId, role, needsPasswordChange } = user;
 
   // Create access and refresh tokens
   const accessToken = jwtHelpers.createToken(
-    { id: userId, email },
+    { userId, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { id: userId, email },
+    { userId, role },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -67,14 +64,14 @@ const refreshTokenHandler = async (
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
 
-  const { id: userId, email } = verifiedToken;
+  const { userId, role } = verifiedToken;
   const user = await isUserExist(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist!');
   }
 
   const newAccessToken = jwtHelpers.createToken(
-    { id: userId, email },
+    { userId, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
@@ -90,7 +87,7 @@ const changePasswordHandler = async (
 ): Promise<void> => {
   const { oldPassword, newPassword } = payload;
 
-  const existingUser = await isUserExist(user?.id);
+  const existingUser = await isUserExist(user?.userId);
   if (!existingUser) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist!');
   }
@@ -117,7 +114,7 @@ const changePasswordHandler = async (
   // Hash the new password and update the user record
   const hashedNewPassword = await hashPassword(newPassword);
   await prisma.user.update({
-    where: { id: user?.id },
+    where: { id: user?.userId },
     data: {
       password: hashedNewPassword,
       needsPasswordChange: false,
