@@ -2,6 +2,7 @@ import express from 'express';
 import { AdminRoutes } from '../modules/admin/admin.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { MemberRoutes } from '../modules/member/member.routes';
+import { SuperAdminRoutes } from '../modules/superAdmin/superAdmin.routes';
 import { UserRoutes } from '../modules/user/user.routes';
 
 const routes = express.Router();
@@ -23,6 +24,10 @@ const moduleRoutes = [
   {
     path: '/admins',
     route: AdminRoutes,
+  },
+  {
+    path: '/super-admins',
+    route: SuperAdminRoutes,
   },
 ];
 

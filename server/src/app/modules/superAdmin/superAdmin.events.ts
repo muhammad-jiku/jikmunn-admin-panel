@@ -1,9 +1,9 @@
-import { RedisClient } from '../../shared/redis';
-import { UserServices } from '../modules/user/user.services';
+import { RedisClient } from '../../../shared/redis';
+import { UserServices } from '../user/user.services';
 import {
   EVENT_SUPER_ADMIN_CREATED,
   EVENT_SUPER_ADMIN_UPDATED,
-} from './event.constants';
+} from './superAdmin.constants';
 
 export const initSuperAdminEvents = () => {
   RedisClient.subscribe(EVENT_SUPER_ADMIN_CREATED, async (e: string) => {
