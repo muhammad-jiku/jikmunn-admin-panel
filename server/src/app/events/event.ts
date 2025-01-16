@@ -3,24 +3,9 @@ import { UserServices } from '../modules/user/user.services';
 import {
   EVENT_ADMIN_CREATED,
   EVENT_ADMIN_UPDATED,
-  EVENT_MEMBER_CREATED,
-  EVENT_MEMBER_UPDATED,
   EVENT_SUPER_ADMIN_CREATED,
   EVENT_SUPER_ADMIN_UPDATED,
 } from './event.constants';
-
-export const initMemberEvents = () => {
-  RedisClient.subscribe(EVENT_MEMBER_CREATED, async (e: string) => {
-    const data = JSON.parse(e);
-    await UserServices.createMemberFromEvent(data);
-  });
-
-  RedisClient.subscribe(EVENT_MEMBER_UPDATED, async (e: string) => {
-    const data = JSON.parse(e);
-    console.log('data..', data);
-    await UserServices.updateMemberFromEvent(data);
-  });
-};
 
 export const initAdminEvents = () => {
   RedisClient.subscribe(EVENT_ADMIN_CREATED, async (e: string) => {

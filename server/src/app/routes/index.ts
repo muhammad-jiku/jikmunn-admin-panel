@@ -1,5 +1,6 @@
 import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.routes';
+import { MemberRoutes } from '../modules/member/member.routes';
 import { UserRoutes } from '../modules/user/user.routes';
 
 const routes = express.Router();
@@ -14,7 +15,11 @@ const moduleRoutes = [
     path: '/users',
     route: UserRoutes,
   },
+  {
+    path: '/members',
+    route: MemberRoutes,
+  },
 ];
 
-moduleRoutes.forEach((route) => routes.use(route.path, route.route));
+moduleRoutes.forEach((r) => routes.use(r.path, r.route));
 export default routes;
