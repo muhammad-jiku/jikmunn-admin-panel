@@ -5,6 +5,7 @@ import { catchAsync } from '../../../shared/catchAsync';
 import { pick } from '../../../shared/pick';
 import { sendResponse } from '../../../shared/sendResponse';
 import { memberFilterableFields } from './member.constants';
+import { IDashboardInformation } from './member.interfaces';
 import { MemberServices } from './member.services';
 
 const getAllFromDB = catchAsync(
@@ -39,6 +40,25 @@ const getByIdFromDB = catchAsync(
         statusCode: httpStatus.OK,
         success: true,
         message: 'Member fetched successfully!!',
+        data: result,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+const getDashboardInformation = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+
+      const result = await MemberServices.getDashboardInformation(user!.userId);
+
+      sendResponse<IDashboardInformation>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Dashboard data fetched successfully!!',
         data: result,
       });
     } catch (error) {
@@ -89,6 +109,7 @@ const deleteFromDB = catchAsync(
 export const MemberControllers = {
   getAllFromDB,
   getByIdFromDB,
+  getDashboardInformation,
   updateIntoDB,
   deleteFromDB,
 };

@@ -2,9 +2,13 @@ import { Member, Prisma } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import { getMonthName } from '../../../lib';
 import { prisma } from '../../../shared/prisma';
 import { memberSearchableFields } from './member.constants';
-import { IMemberFilterRequest } from './member.interfaces';
+import {
+  IDashboardInformation,
+  IMemberFilterRequest,
+} from './member.interfaces';
 
 const getAllFromDB = async (
   filters: IMemberFilterRequest,
@@ -72,7 +76,69 @@ const getByIdFromDB = async (id: string): Promise<Member | null> => {
       id,
     },
   });
+
   return result;
+};
+
+const getDashboardInformation = async (
+  id: string
+): Promise<IDashboardInformation | null> => {
+  const transactions = await prisma.transaction.groupBy({
+    by: ['type'],
+    where: { memberId: id },
+    _sum: { amount: true },
+  });
+
+  const totalIncome =
+    transactions.find((t) => t.type === 'INCOME')?._sum.amount || 0;
+  const totalExpense =
+    transactions.find((t) => t.type === 'EXPENSE')?._sum.amount || 0;
+  const availableBalance = totalIncome - totalExpense;
+
+  const currentYear = new Date().getFullYear();
+  const yearlyData = await prisma.transaction.groupBy({
+    by: ['type', 'createdAt'],
+    where: {
+      memberId: id,
+      createdAt: {
+        gte: new Date(currentYear, 0, 1),
+        lte: new Date(currentYear, 11, 31),
+      },
+    },
+    _sum: { amount: true },
+  });
+
+  const data = Array.from({ length: 12 }, (_, i) => {
+    const monthData = yearlyData.filter(
+      (d) => new Date(d.createdAt).getMonth() === i
+    );
+    return {
+      label: getMonthName(i) || `Month ${i + 1}`,
+      income: monthData.find((m) => m.type === 'INCOME')?._sum.amount || 0,
+      expense: monthData.find((m) => m.type === 'EXPENSE')?._sum.amount || 0,
+    };
+  });
+
+  const lastTransactions = await prisma.transaction.findMany({
+    where: { memberId: id },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+  });
+
+  const lastAccounts = await prisma.account.findMany({
+    where: { memberId: id },
+    orderBy: { createdAt: 'desc' },
+    take: 4,
+  });
+
+  return {
+    availableBalance,
+    totalIncome,
+    totalExpense,
+    chartData: data,
+    lastTransactions,
+    lastAccounts,
+  };
 };
 
 const updateIntoDB = async (
@@ -120,6 +186,7 @@ const deleteFromDB = async (id: string): Promise<Member> => {
 export const MemberServices = {
   getAllFromDB,
   getByIdFromDB,
+  getDashboardInformation,
   updateIntoDB,
   deleteFromDB,
 };

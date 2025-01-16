@@ -8,8 +8,11 @@ import { MemberValidations } from './member.validations';
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/dashboard')
+  .get(auth(USER_ROLES.MEMBER), MemberControllers.getDashboardInformation);
 
+router
+  .route('/')
   .get(
     auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
     MemberControllers.getAllFromDB
