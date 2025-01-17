@@ -1,4 +1,5 @@
 import express from 'express';
+import { AccountRoutes } from '../modules/account/account.routes';
 import { AdminRoutes } from '../modules/admin/admin.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { MemberRoutes } from '../modules/member/member.routes';
@@ -33,6 +34,10 @@ const moduleRoutes = [
   {
     path: '/transactions',
     route: TransactionRoutes,
+  },
+  {
+    path: '/accounts',
+    route: AccountRoutes,
   },
 ];
 
