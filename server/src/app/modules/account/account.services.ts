@@ -2,6 +2,7 @@ import { Account } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/handleApiError';
 import { prisma } from '../../../shared/prisma';
+import { AccountCreatedEvent, AccountUpdatedEvent } from './account.interfaces';
 
 const insertIntoDB = async (
   userId: string,
@@ -40,6 +41,41 @@ const insertIntoDB = async (
 
     return account;
   });
+};
+
+const createFromEvent = async (e: AccountCreatedEvent) => {
+  const accountData: Partial<Account> = {
+    id: e.id,
+    memberId: e.memberId,
+    accountName: e.accountName,
+    accountNumber: e.accountNumber,
+    accountBalance: e.accountBalance,
+  };
+
+  const userId = accountData?.memberId;
+
+  const data = await insertIntoDB(userId as string, accountData as Account);
+  console.log('Account Result:', data);
+
+  return data;
+};
+
+const updateFromEvent = async (e: AccountUpdatedEvent): Promise<void> => {
+  const account: Partial<Account> = {
+    id: e.id,
+    memberId: e.memberId,
+    accountName: e.accountName,
+    accountNumber: e.accountNumber,
+    accountBalance: e.accountBalance,
+  };
+
+  const data = await prisma.account.update({
+    where: {
+      id: e.id,
+    },
+    data: account as Account,
+  });
+  console.log('Result:', data);
 };
 
 const getAllFromDB = async (userId: string): Promise<Account[]> => {
@@ -85,6 +121,8 @@ const insertMoneyIntoDB = async (
 
 export const AccountServices = {
   insertIntoDB,
+  createFromEvent,
+  updateFromEvent,
   getAllFromDB,
   insertMoneyIntoDB,
 };

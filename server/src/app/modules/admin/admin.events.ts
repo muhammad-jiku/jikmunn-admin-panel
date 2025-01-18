@@ -14,6 +14,6 @@ export const initAdminEvents = () => {
     const data = JSON.parse(e);
     console.log('admin data updated..', data);
 
-    await UserServices.updateSuperAdminFromEvent(data);
+    await UserServices.updateMemberFromEvent(data);
   });
 };

@@ -1,8 +1,16 @@
-import { Transaction, TransactionStatus } from '@prisma/client';
+import {
+  Transaction,
+  TransactionStatus,
+  TransactionType,
+} from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/handleApiError';
 import { IGenericResponse } from '../../../interfaces/common';
 import { prisma } from '../../../shared/prisma';
+import {
+  TransactionCreatedEvent,
+  TransactionUpdatedEvent,
+} from './transaction.interfaces';
 
 const insertIntoDB = async (
   id: string,
@@ -38,6 +46,66 @@ const insertIntoDB = async (
   });
 
   return result;
+};
+
+const createFromEvent = async (
+  e: TransactionCreatedEvent
+): Promise<Transaction | null> => {
+  const transactionData: Partial<Transaction> = {
+    id: e.id,
+    memberId: e.memberId,
+    description: e.description,
+    type: e.type as TransactionType,
+    status: e.status as TransactionStatus,
+    amount: e.amount,
+    source: e.source,
+  };
+
+  const id = transactionData?.id;
+  const userId = transactionData?.memberId;
+  const transaction = await insertIntoDB(
+    id as string,
+    transactionData as Transaction,
+    userId as string
+  );
+  console.log('Transaction created:', transaction);
+
+  return transaction;
+};
+
+const updateFromEvent = async (e: TransactionUpdatedEvent): Promise<void> => {
+  const isExist = await prisma.transaction.findUnique({
+    where: {
+      id: e.id,
+    },
+  });
+
+  if (!isExist) {
+    await createFromEvent(e);
+    return;
+  }
+
+  try {
+    const updatedTransaction = await prisma.transaction.update({
+      where: {
+        id: e.id,
+      },
+      data: {
+        description: e.description,
+        status: e.status as TransactionStatus,
+        amount: e.amount,
+        source: e.source,
+      },
+    });
+
+    console.log('Transaction updated:', updatedTransaction);
+  } catch (error) {
+    console.error('Error during transaction update:', error);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to update transaction'
+    );
+  }
 };
 
 const getAllFromDB = async (
@@ -147,6 +215,8 @@ const transferFundsInsideDB = async (
 
 export const TransactionServices = {
   insertIntoDB,
+  createFromEvent,
+  updateFromEvent,
   getAllFromDB,
   transferFundsInsideDB,
 };
