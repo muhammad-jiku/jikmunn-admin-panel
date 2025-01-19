@@ -17,7 +17,10 @@ datasource db {
 model Member {
   id           String        @id @default(uuid())
   memberId     String        @unique
-  name         Json // Store firstName, lastName, and middleName in JSON format
+  // name         Json // Store firstName, lastName, and middleName in JSON format
+  firstName    String
+  lastName     String
+  middleName   String?
   profileImage String?
   email        String        @unique
   contact      String        @unique
@@ -37,7 +40,10 @@ model Member {
 model Admin {
   id           String   @id @default(uuid())
   adminId      String   @unique
-  name         Json // Store firstName, lastName, and middleName in JSON format
+  // name         Json // Store firstName, lastName, and middleName in JSON format
+  firstName    String
+  lastName     String
+  middleName   String?
   profileImage String?
   email        String   @unique
   contact      String   @unique
@@ -52,7 +58,10 @@ model Admin {
 model Super_Admin {
   id           String   @id @default(uuid())
   superAdminId String   @unique
-  name         Json // Store firstName, lastName, and middleName in JSON format
+  // name         Json // Store firstName, lastName, and middleName in JSON format
+  firstName    String
+  lastName     String
+  middleName   String?
   profileImage String?
   email        String   @unique
   contact      String   @unique
@@ -84,27 +93,6 @@ model User {
   @@unique([memberId, adminId, superAdminId])
   @@map("tbluser")
 }
-
-// model User {
-//   id                  Int           @id @default(autoincrement())
-//   email               String        @unique
-//   firstName           String
-//   lastName            String?
-//   contact             String?
-//   accounts            String[]
-//   password            String?
-//   needsPasswordChange Boolean       @default(true)
-//   passwordChangedAt   DateTime?
-//   provider            String?
-//   country             String?
-//   currency            String        @default("USD")
-//   createdAt           DateTime      @default(now())
-//   updatedAt           DateTime      @updatedAt
-//   accountsRel         Account[]
-//   transactions        Transaction[]
-
-//   @@map("tbluser")
-// }
 
 model Account {
   id             String   @id @default(uuid())

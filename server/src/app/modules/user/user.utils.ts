@@ -10,11 +10,11 @@ export const findLastMemberId = async (): Promise<string | undefined> => {
       createdAt: 'desc',
     },
     select: {
-      id: true,
+      memberId: true,
     },
   });
 
-  return lastMember?.id ? lastMember?.id.substring(2) : undefined;
+  return lastMember?.memberId ? lastMember?.memberId.substring(2) : undefined;
 };
 
 export const generateMemberId = async (): Promise<string> => {
@@ -34,11 +34,11 @@ export const findLastAdminId = async (): Promise<string | undefined> => {
       createdAt: 'desc',
     },
     select: {
-      id: true,
+      adminId: true,
     },
   });
 
-  return lastAdmin?.id ? lastAdmin?.id.substring(2) : undefined;
+  return lastAdmin?.adminId ? lastAdmin?.adminId.substring(2) : undefined;
 };
 
 export const generateAdminId = async (): Promise<string> => {
@@ -58,11 +58,13 @@ export const findLastSuperAdminId = async (): Promise<string | undefined> => {
       createdAt: 'desc',
     },
     select: {
-      id: true,
+      superAdminId: true,
     },
   });
 
-  return lastSuperAdmin?.id ? lastSuperAdmin?.id.substring(2) : undefined;
+  return lastSuperAdmin?.superAdminId
+    ? lastSuperAdmin?.superAdminId.substring(3)
+    : undefined;
 };
 
 export const generateSuperAdminId = async (): Promise<string> => {

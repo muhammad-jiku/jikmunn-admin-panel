@@ -7,3 +7,5 @@ Sun Jan 19 2025 14:46:21 } [JIKMUNN-ADMIN-PANEL] info: Server running on http://
 Sun Jan 19 2025 14:46:34 } [JIKMUNN-ADMIN-PANEL] info: memberId: 
 Sun Jan 19 2025 14:46:35 } [JIKMUNN-ADMIN-PANEL] info: member created
 Sun Jan 19 2025 14:46:35 } [JIKMUNN-ADMIN-PANEL] info: User created:
+Sun Jan 19 2025 14:48:8 } [JIKMUNN-ADMIN-PANEL] info: Redis Connected
+Sun Jan 19 2025 14:48:8 } [JIKMUNN-ADMIN-PANEL] info: Server running on http://localhost:8080

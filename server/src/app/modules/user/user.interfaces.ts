@@ -1,6 +1,8 @@
 // Interfaces
-export interface IMember {
-  id?: string; // Optional because it will be auto-generated
+
+//
+export type MemberCreatedEvent = {
+  id: string;
   memberId: string;
   firstName: string;
   lastName: string;
@@ -12,56 +14,14 @@ export interface IMember {
   provider?: string;
   country?: string;
   currency?: string; // Defaults to "USD"
-}
-
-export interface IAdmin {
-  id?: string; // Optional because it will be auto-generated
-  adminId: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string;
-  profileImage?: string;
-  email: string;
-  contact: string;
-  gender: 'MALE' | 'FEMALE'; // Enum based on Gender
-}
-
-export interface ISuperAdmin {
-  id?: string; // Optional because it will be auto-generated
-  superAdminId: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string;
-  profileImage?: string;
-  email: string;
-  contact: string;
-  gender: 'MALE' | 'FEMALE'; // Enum based on Gender
-}
-
-//
-export type MemberCreatedEvent = {
-  id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
-  profileImage?: string;
-  email: string;
-  contact: string;
-  gender: 'MALE' | 'FEMALE'; // Enum based on Gender
-  provider?: string;
-  country?: string;
-  currency?: string; // Defaults to "USD"
 };
 
 export type MemberUpdatedEvent = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
+  memberId: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
   profileImage?: string;
   email: string;
   contact: string;
@@ -73,11 +33,10 @@ export type MemberUpdatedEvent = {
 
 export type AdminCreatedEvent = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
+  adminId: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
   profileImage?: string;
   email: string;
   contact: string;
@@ -86,11 +45,10 @@ export type AdminCreatedEvent = {
 
 export type AdminUpdatedEvent = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
+  adminId: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
   profileImage?: string;
   email: string;
   contact: string;
@@ -99,11 +57,10 @@ export type AdminUpdatedEvent = {
 
 export type SuperAdminCreatedEvent = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
+  superAdminId: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
   profileImage?: string;
   email: string;
   contact: string;
@@ -112,11 +69,10 @@ export type SuperAdminCreatedEvent = {
 
 export type SuperAdminUpdatedEvent = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
+  superAdminId: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
   profileImage?: string;
   email: string;
   contact: string;

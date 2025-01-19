@@ -25,7 +25,7 @@ import {
   generateSuperAdminId,
 } from './user.utils';
 
-// Member's id creation
+// Member creation
 const insertMemberIntoDB = async (
   memberData: Member,
   userData: User
@@ -75,10 +75,11 @@ const insertMemberIntoDB = async (
 // Sample function to handle an event and create a Member and User
 const createMemberFromEvent = async (e: MemberCreatedEvent) => {
   const memberData: Partial<Member> = {
-    memberId: e.id,
-    firstName: e.name.firstName,
-    lastName: e.name.lastName,
-    middleName: e.name.middleName,
+    id: e.id,
+    memberId: e.memberId,
+    firstName: e.firstName,
+    lastName: e.lastName,
+    middleName: e.middleName,
     email: e.email,
     contact: e.contact,
     gender: e.gender as Gender,
@@ -89,7 +90,7 @@ const createMemberFromEvent = async (e: MemberCreatedEvent) => {
   };
 
   const userData: Partial<User> = {
-    userId: e.id,
+    userId: e.memberId,
     password: config.default.member_pass as string,
     role: UserRole.MEMBER,
   };
@@ -102,7 +103,7 @@ const createMemberFromEvent = async (e: MemberCreatedEvent) => {
 const updateMemberFromEvent = async (e: MemberUpdatedEvent): Promise<void> => {
   const isExist = await prisma.member.findFirst({
     where: {
-      memberId: e.id,
+      memberId: e.memberId,
     },
   });
 
@@ -111,10 +112,11 @@ const updateMemberFromEvent = async (e: MemberUpdatedEvent): Promise<void> => {
     return;
   } else {
     const member: Partial<Member> = {
-      memberId: e.id,
-      firstName: e.name.firstName,
-      lastName: e.name.lastName,
-      middleName: e.name.middleName,
+      id: e.id,
+      memberId: e.memberId,
+      firstName: e.firstName,
+      lastName: e.lastName,
+      middleName: e.middleName,
       email: e.email,
       contact: e.contact,
       gender: e.gender as Gender,
@@ -125,7 +127,7 @@ const updateMemberFromEvent = async (e: MemberUpdatedEvent): Promise<void> => {
     };
     await prisma.member.update({
       where: {
-        memberId: e.id,
+        memberId: e.memberId,
       },
       data: member as Member,
     });
@@ -149,7 +151,7 @@ const insertAdminIntoDB = async (
     // Step 1: Generate a unique admin ID
     const adminId = await generateAdminId();
     adminData.adminId = adminId;
-
+    console.log('adminId: ', adminId);
     // Step 2: Create Admin first to ensure the adminId exists
     const newAdmin = await prisma.admin.create({
       data: {
@@ -182,10 +184,11 @@ const insertAdminIntoDB = async (
 // Sample function to handle an event and create a Admin and User
 const createAdminFromEvent = async (e: AdminCreatedEvent) => {
   const adminData: Partial<Admin> = {
-    adminId: e.id,
-    firstName: e.name.firstName,
-    lastName: e.name.lastName,
-    middleName: e.name.middleName,
+    id: e.id,
+    adminId: e.adminId,
+    firstName: e.firstName,
+    lastName: e.lastName,
+    middleName: e.middleName,
     email: e.email,
     profileImage: e.profileImage,
     contact: e.contact,
@@ -193,7 +196,7 @@ const createAdminFromEvent = async (e: AdminCreatedEvent) => {
   };
 
   const userData: Partial<User> = {
-    userId: e.id,
+    userId: e.adminId,
     password: config.default.admin_pass as string,
     role: UserRole.ADMIN,
   };
@@ -206,7 +209,7 @@ const createAdminFromEvent = async (e: AdminCreatedEvent) => {
 const updateAdminFromEvent = async (e: AdminUpdatedEvent): Promise<void> => {
   const isExist = await prisma.admin.findFirst({
     where: {
-      adminId: e.id,
+      adminId: e.adminId,
     },
   });
 
@@ -215,10 +218,11 @@ const updateAdminFromEvent = async (e: AdminUpdatedEvent): Promise<void> => {
     return;
   } else {
     const admin: Partial<Admin> = {
-      adminId: e.id,
-      firstName: e.name.firstName,
-      lastName: e.name.lastName,
-      middleName: e.name.middleName,
+      id: e.id,
+      adminId: e.adminId,
+      firstName: e.firstName,
+      lastName: e.lastName,
+      middleName: e.middleName,
       email: e.email,
       profileImage: e.profileImage,
       contact: e.contact,
@@ -226,7 +230,7 @@ const updateAdminFromEvent = async (e: AdminUpdatedEvent): Promise<void> => {
     };
     await prisma.admin.update({
       where: {
-        adminId: e.id,
+        adminId: e.adminId,
       },
       data: admin as Admin,
     });
@@ -250,6 +254,7 @@ const insertSuperAdminIntoDB = async (
     // Step 1: Generate a unique super admin ID
     const superAdminId = await generateSuperAdminId();
     superAdminData.superAdminId = superAdminId;
+    console.log('superAdminId: ', superAdminId);
 
     // Step 2: Create Super Admin first to ensure the superAdminId exists
     const newSuperAdmin = await prisma.super_Admin.create({
@@ -283,10 +288,11 @@ const insertSuperAdminIntoDB = async (
 // Sample function to handle an event and create a Super Admin and User
 const createSuperAdminFromEvent = async (e: SuperAdminCreatedEvent) => {
   const superAdminData: Partial<Super_Admin> = {
-    superAdminId: e.id,
-    firstName: e.name.firstName,
-    lastName: e.name.lastName,
-    middleName: e.name.middleName,
+    id: e.id,
+    superAdminId: e.superAdminId,
+    firstName: e.firstName,
+    lastName: e.lastName,
+    middleName: e.middleName,
     email: e.email,
     profileImage: e.profileImage,
     contact: e.contact,
@@ -294,7 +300,7 @@ const createSuperAdminFromEvent = async (e: SuperAdminCreatedEvent) => {
   };
 
   const userData: Partial<User> = {
-    userId: e.id,
+    userId: e.superAdminId,
     password: config.default.super_admin_pass as string,
     role: UserRole.SUPER_ADMIN,
   };
@@ -312,7 +318,7 @@ const updateSuperAdminFromEvent = async (
 ): Promise<void> => {
   const isExist = await prisma.super_Admin.findFirst({
     where: {
-      superAdminId: e.id,
+      superAdminId: e.superAdminId,
     },
   });
 
@@ -321,10 +327,11 @@ const updateSuperAdminFromEvent = async (
     return;
   } else {
     const superAdmin: Partial<Super_Admin> = {
-      superAdminId: e.id,
-      firstName: e.name.firstName,
-      lastName: e.name.lastName,
-      middleName: e.name.middleName,
+      id: e.id,
+      superAdminId: e.superAdminId,
+      firstName: e.firstName,
+      lastName: e.lastName,
+      middleName: e.middleName,
       email: e.email,
       profileImage: e.profileImage,
       contact: e.contact,
@@ -332,7 +339,7 @@ const updateSuperAdminFromEvent = async (
     };
     await prisma.super_Admin.update({
       where: {
-        superAdminId: e.id,
+        superAdminId: e.superAdminId,
       },
       data: superAdmin as Super_Admin,
     });

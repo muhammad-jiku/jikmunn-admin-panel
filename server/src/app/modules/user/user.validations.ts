@@ -6,17 +6,17 @@ const createMember = z.object({
     .object({
       member: z
         .object({
-          name: z
-            .object({
-              firstName: z.string({
-                required_error: 'First name is required',
-              }),
-              lastName: z.string({
-                required_error: 'Last name is required',
-              }),
-              middleName: z.string().optional(),
-            })
-            .strict(),
+          // name: z
+          //   .object({
+          firstName: z.string({
+            required_error: 'First name is required',
+          }),
+          lastName: z.string({
+            required_error: 'Last name is required',
+          }),
+          middleName: z.string().optional(),
+          // })
+          // .strict(),
           profileImage: z.string().optional(),
           email: z
             .string({
@@ -43,6 +43,8 @@ const createAdmin = z.object({
     .object({
       admin: z
         .object({
+          // name: z
+          //   .object({
           firstName: z.string({
             required_error: 'First name is required',
           }),
@@ -50,6 +52,8 @@ const createAdmin = z.object({
             required_error: 'Last name is required',
           }),
           middleName: z.string().optional(),
+          // })
+          // .strict(),
           profileImage: z.string().optional(),
           email: z
             .string({
@@ -73,6 +77,8 @@ const createSuperAdmin = z.object({
     .object({
       superAdmin: z
         .object({
+          // name: z
+          //   .object({
           firstName: z.string({
             required_error: 'First name is required',
           }),
@@ -80,6 +86,8 @@ const createSuperAdmin = z.object({
             required_error: 'Last name is required',
           }),
           middleName: z.string().optional(),
+          // })
+          // .strict(),
           profileImage: z.string().optional(),
           email: z
             .string({
