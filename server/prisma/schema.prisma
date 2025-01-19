@@ -17,9 +17,7 @@ datasource db {
 model Member {
   id           String        @id @default(uuid())
   memberId     String        @unique
-  firstName    String
-  lastName     String
-  middleName   String?
+  name         Json // Store firstName, lastName, and middleName in JSON format
   profileImage String?
   email        String        @unique
   contact      String        @unique
@@ -39,9 +37,7 @@ model Member {
 model Admin {
   id           String   @id @default(uuid())
   adminId      String   @unique
-  firstName    String
-  lastName     String
-  middleName   String?
+  name         Json // Store firstName, lastName, and middleName in JSON format
   profileImage String?
   email        String   @unique
   contact      String   @unique
@@ -56,9 +52,7 @@ model Admin {
 model Super_Admin {
   id           String   @id @default(uuid())
   superAdminId String   @unique
-  firstName    String
-  lastName     String
-  middleName   String?
+  name         Json // Store firstName, lastName, and middleName in JSON format
   profileImage String?
   email        String   @unique
   contact      String   @unique

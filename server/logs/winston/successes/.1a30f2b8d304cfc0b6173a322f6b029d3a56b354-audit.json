@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\successes\\.1a30f2b8d304cfc0b6173a322f6b029d3a56b354-audit.json",
+    "files": [
+        {
+            "date": 1737266792728,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\successes\\jikmunn-admin-panel-2025-19-01-12-success.log",
+            "hash": "75433911db080a70def4abe63ea935f3ad71877cde232cff0c65cb7185207efe"
+        },
+        {
+            "date": 1737273180073,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\successes\\jikmunn-admin-panel-2025-19-01-13-success.log",
+            "hash": "62b3b89438b4040a1d22d97ce63daaba14a37532f053a23b4881e7d43a7cd5cd"
+        },
+        {
+            "date": 1737275614987,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\successes\\jikmunn-admin-panel-2025-19-01-14-success.log",
+            "hash": "8d68af6307b7cb1a03fae5751bda391a84cb3c445157650ecec8ac004ce73310"
+        }
+    ],
+    "hashType": "sha256"
+}

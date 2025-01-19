@@ -42,7 +42,7 @@ const insertMemberIntoDB = async (
     // Step 1: Generate a unique member ID based on the academic semester
     const memberId = await generateMemberId();
     memberData.memberId = memberId;
-
+    console.log('memberId: ', memberId);
     // Step 2: Create Member first to ensure the memberId exists
     const newMember = await prisma.member.create({
       data: {
@@ -59,7 +59,7 @@ const insertMemberIntoDB = async (
       },
     });
 
-    console.log('Member created:', newMember);
+    console.log('Member created', newMember);
     console.log('User created:', newUser);
 
     return newUser;

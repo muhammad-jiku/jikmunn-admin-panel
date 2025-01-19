@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\.30f3a0b2ba115ecc4fe5e43c7906dfffccf143e7-audit.json",
+    "files": [
+        {
+            "date": 1737266792743,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\jikmunn-admin-panel-2025-19-01-12-error.log",
+            "hash": "374b5fd314b9a00cd661b5f68c76d80754be9a50ec794f9d2e23f969670fb968"
+        },
+        {
+            "date": 1737273180087,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\jikmunn-admin-panel-2025-19-01-13-error.log",
+            "hash": "c696695a8084678ddf3b0805d42129325cbe5202762092acb84025bb41524998"
+        },
+        {
+            "date": 1737275614999,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\jikmunn-admin-panel-2025-19-01-14-error.log",
+            "hash": "d7ab43365bd6fcab4c0000bdcc9ba251ef3eb7c9de0a6f9d862c7702c9dbbe21"
+        }
+    ],
+    "hashType": "sha256"
+}
