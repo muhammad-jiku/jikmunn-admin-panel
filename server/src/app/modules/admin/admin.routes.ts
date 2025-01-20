@@ -17,16 +17,16 @@ router
 router
   .route('/:id')
   .get(
-    // auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
     AdminControllers.getByIdFromDB
   )
   .patch(
     validateRequest(AdminValidations.updateAdmin),
-    // auth( USER_ROLES.ADMIN),
+    auth(USER_ROLES.ADMIN),
     AdminControllers.updateOneInDB
   )
   .delete(
-    // auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
     AdminControllers.deleteByIdFromDB
   );
 

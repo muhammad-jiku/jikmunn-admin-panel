@@ -106,7 +106,7 @@ const changePasswordHandler = async (
   );
   if (isNewPasswordSame) {
     throw new ApiError(
-      httpStatus.UNAUTHORIZED,
+      httpStatus.CONFLICT,
       'New password cannot be the same as the old password'
     );
   }
@@ -114,7 +114,7 @@ const changePasswordHandler = async (
   // Hash the new password and update the user record
   const hashedNewPassword = await hashPassword(newPassword);
   await prisma.user.update({
-    where: { id: user?.userId },
+    where: { userId: user?.userId },
     data: {
       password: hashedNewPassword,
       needsPasswordChange: false,

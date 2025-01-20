@@ -11,6 +11,8 @@ export const auth =
     try {
       // get authorization token
       const token = req.headers.authorization;
+      console.log('req token....', token);
+      console.log('secret....', config.jwt.secret);
       if (!token) {
         throw new ApiError(
           httpStatus.UNAUTHORIZED,
@@ -25,9 +27,11 @@ export const auth =
         config.jwt.secret as Secret
       );
 
+      console.log('verifyToken....', verifiedUserToken);
       req.user = verifiedUserToken; // userId, role
-
+      console.log('user....', req.user);
       // guard against invalid credentials while verifying user token
+      console.log('first required roles...', requiredRoles);
       if (
         requiredRoles.length &&
         !requiredRoles.includes(verifiedUserToken.role)
