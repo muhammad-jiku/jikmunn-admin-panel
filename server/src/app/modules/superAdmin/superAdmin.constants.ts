@@ -1,15 +1,16 @@
-export const superAdminSearchableFields: string[] = [
-  'id',
-  'email',
-  'contact',
-  'name.firstName',
-  'name.middleName',
-  'name.lastName',
-];
-
 export const superAdminFilterableFields: string[] = [
   'searchTerm',
-  'id',
+  'superAdminId',
+  'email',
+  'contact',
+  'gender',
+];
+
+export const superAdminSearchableFields: string[] = [
+  'superAdminId',
+  'firstName',
+  'lastName',
+  'middleName',
   'email',
   'contact',
 ];

@@ -1,4 +1,6 @@
 import { Prisma, Super_Admin } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/handleApiError';
 import { paginationHelpers } from '../../../helpers/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -65,11 +67,18 @@ const getAllFromDB = async (
 
 // Get a single super admin by ID
 const getByIdFromDB = async (id: string): Promise<Super_Admin | null> => {
-  const superAdmin = await prisma.super_Admin.findUnique({
-    where: { id },
+  const result = await prisma.super_Admin.findUnique({
+    where: { superAdminId: id },
   });
 
-  return superAdmin;
+  if (!result) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the super admin does not exist!'
+    );
+  }
+
+  return result;
 };
 
 // Update a super admin by ID
@@ -77,21 +86,55 @@ const updateOneInDB = async (
   id: string,
   payload: Prisma.Super_AdminUpdateInput
 ): Promise<Super_Admin | null> => {
-  const superAdmin = await prisma.super_Admin.update({
-    where: { id },
+  const result = await prisma.super_Admin.update({
+    where: { superAdminId: id },
     data: payload,
   });
 
-  return superAdmin;
+  if (!result) {
+    throw new ApiError(httpStatus.CONFLICT, 'Sorry, failed to update!');
+  }
+
+  return result;
 };
 
 // Delete a super admin by ID
 const deleteByIdFromDB = async (id: string): Promise<Super_Admin | null> => {
-  const deletedSuperAdmin = await prisma.super_Admin.delete({
-    where: { id },
+  const superAdmin = await prisma.super_Admin.findUnique({
+    where: { superAdminId: id },
+    include: {
+      user: true, // Include the related user
+    },
   });
 
-  return deletedSuperAdmin;
+  if (!superAdmin) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the super admin does not exist!'
+    );
+  }
+
+  console.log('super admin', superAdmin);
+  console.log('user', superAdmin.user);
+  // Step 1: Delete the User record associated with the Super Admin
+  if (superAdmin.user) {
+    await prisma.user.delete({
+      where: { userId: superAdmin.user.userId },
+    });
+  }
+
+  // Step 2: Delete the Super Admin record
+  const result = await prisma.super_Admin.delete({
+    where: {
+      superAdminId: id,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Sorry, failed to delete!');
+  }
+
+  return result;
 };
 
 export const SuperAdminServices = {

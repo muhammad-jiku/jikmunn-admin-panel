@@ -18,7 +18,7 @@ const getAllFromDB = catchAsync(
       sendResponse<Super_Admin[]>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Super Admins data fetched successfully!!',
+        message: 'Super admins data fetched successfully!!',
         meta: result.meta,
         data: result.data,
       });
@@ -38,7 +38,7 @@ const getByIdFromDB = catchAsync(
       sendResponse<Super_Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Super Admin data fetched successfully!!',
+        message: 'Super admin data fetched successfully!!',
         data: result,
       });
     } catch (error) {
@@ -58,7 +58,7 @@ const updateOneInDB = catchAsync(
       sendResponse<Super_Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Super Admin updated successfully!!',
+        message: 'Super admin data updated successfully!!',
         data: result,
       });
     } catch (error) {
@@ -77,7 +77,7 @@ const deleteByIdFromDB = catchAsync(
       sendResponse<Super_Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Super Admin deleted successfully!!',
+        message: 'Super admin data deleted successfully!!',
         data: result,
       });
     } catch (error) {
