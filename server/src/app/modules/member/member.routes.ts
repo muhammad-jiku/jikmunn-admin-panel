@@ -25,7 +25,7 @@ router
     MemberControllers.getByIdFromDB
   )
   .patch(
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.MEMBER),
+    auth(USER_ROLES.MEMBER),
     validateRequest(MemberValidations.updateMember),
     MemberControllers.updateIntoDB
   )

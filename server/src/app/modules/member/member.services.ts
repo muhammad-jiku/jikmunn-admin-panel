@@ -1,4 +1,6 @@
 import { Member, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/handleApiError';
 import { paginationHelpers } from '../../../helpers/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -73,9 +75,16 @@ const getAllFromDB = async (
 const getByIdFromDB = async (id: string): Promise<Member | null> => {
   const result = await prisma.member.findUnique({
     where: {
-      id,
+      memberId: id,
     },
   });
+
+  if (!result) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the member does not exist!'
+    );
+  }
 
   return result;
 };
@@ -147,38 +156,52 @@ const updateIntoDB = async (
 ): Promise<Member> => {
   const result = await prisma.member.update({
     where: {
-      id,
+      memberId: id,
     },
     data: payload,
   });
+
+  if (!result) {
+    throw new ApiError(httpStatus.CONFLICT, 'Sorry, failed to update!');
+  }
+
   return result;
 };
 
 const deleteFromDB = async (id: string): Promise<Member> => {
   const member = await prisma.member.findUnique({
-    where: { id },
+    where: { memberId: id },
     include: {
       user: true, // Include the related user
     },
   });
 
   if (!member) {
-    throw new Error('Member not found');
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the member does not exist!'
+    );
   }
 
+  console.log('member', member);
+  console.log('user', member.user);
   // Step 1: Delete the User record associated with the Member
   if (member.user) {
     await prisma.user.delete({
-      where: { id: member.user.id },
+      where: { userId: member.user.userId },
     });
   }
 
   // Step 2: Delete the Member record
   const result = await prisma.member.delete({
     where: {
-      id,
+      memberId: id,
     },
   });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Sorry, failed to delete!');
+  }
 
   return result;
 };

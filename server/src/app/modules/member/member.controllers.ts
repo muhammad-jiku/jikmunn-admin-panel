@@ -19,7 +19,7 @@ const getAllFromDB = catchAsync(
       sendResponse<Member[]>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Members fetched successfully!!',
+        message: 'Members data fetched successfully!!',
         meta: result.meta,
         data: result.data,
       });
@@ -39,7 +39,7 @@ const getByIdFromDB = catchAsync(
       sendResponse<Member>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Member fetched successfully!!',
+        message: 'Member data fetched successfully!!',
         data: result,
       });
     } catch (error) {
@@ -78,7 +78,7 @@ const updateIntoDB = catchAsync(
       sendResponse<Member>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Member updated successfully!!',
+        message: 'Member data updated successfully!!',
         data: result,
       });
     } catch (error) {
@@ -97,7 +97,7 @@ const deleteFromDB = catchAsync(
       sendResponse<Member>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Member deleted successfully!!',
+        message: 'Member data deleted successfully!!',
         data: result,
       });
     } catch (error) {
