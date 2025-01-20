@@ -7,12 +7,12 @@ export const memberFilterableFields: string[] = [
 ];
 
 export const memberSearchableFields: string[] = [
+  'memberId',
   'firstName',
   'lastName',
   'middleName',
   'email',
   'contact',
-  'memberId',
 ];
 
 export const EVENT_MEMBER_CREATED = 'member.created';

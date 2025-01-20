@@ -7,13 +7,13 @@ export const initAdminEvents = () => {
     const data = JSON.parse(e);
     console.log('admin data created..', data);
 
-    await UserServices.createMemberFromEvent(data);
+    await UserServices.createAdminFromEvent(data);
   });
 
   RedisClient.subscribe(EVENT_ADMIN_UPDATED, async (e: string) => {
     const data = JSON.parse(e);
     console.log('admin data updated..', data);
 
-    await UserServices.updateMemberFromEvent(data);
+    await UserServices.updateAdminFromEvent(data);
   });
 };

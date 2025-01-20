@@ -59,6 +59,11 @@
             "date": 1737349515374,
             "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\jikmunn-admin-panel-2025-20-01-11-error.log",
             "hash": "de18a84f400f8431ad697a86e58958812d1154031d2d8d92d781f37dc9da2e9f"
+        },
+        {
+            "date": 1737353334368,
+            "name": "D:\\_my_portfolio_\\Full Stack\\PERN\\1. Admin Panel\\jikmunn-admin-panel\\server\\logs\\winston\\errors\\jikmunn-admin-panel-2025-20-01-12-error.log",
+            "hash": "b94ced88bb2c28e97f4b348474131c2560c7f44789fcb793098ddd0e15a37c90"
         }
     ],
     "hashType": "sha256"

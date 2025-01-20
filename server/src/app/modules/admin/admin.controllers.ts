@@ -38,7 +38,7 @@ const getByIdFromDB = catchAsync(
       sendResponse<Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Admin fetched successfully!!',
+        message: 'Admin data fetched successfully!!',
         data: result,
       });
     } catch (error) {
@@ -58,7 +58,7 @@ const updateOneInDB = catchAsync(
       sendResponse<Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Admin updated successfully!!',
+        message: 'Admin data updated successfully!!',
         data: result,
       });
     } catch (error) {
@@ -77,7 +77,7 @@ const deleteByIdFromDB = catchAsync(
       sendResponse<Admin>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Admin deleted successfully!!',
+        message: 'Admin data deleted successfully!!',
         data: result,
       });
     } catch (error) {

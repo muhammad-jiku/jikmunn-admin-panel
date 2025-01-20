@@ -1,4 +1,6 @@
 import { Admin, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/handleApiError';
 import { paginationHelpers } from '../../../helpers/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -65,11 +67,17 @@ const getAllFromDB = async (
 
 // Get a single admin by ID
 const getByIdFromDB = async (id: string): Promise<Admin | null> => {
-  const admin = await prisma.admin.findUnique({
-    where: { id },
+  const result = await prisma.admin.findUnique({
+    where: { adminId: id },
   });
+  if (!result) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the admin does not exist!'
+    );
+  }
 
-  return admin;
+  return result;
 };
 
 // Update an admin by ID
@@ -77,21 +85,55 @@ const updateOneInDB = async (
   id: string,
   payload: Prisma.AdminUpdateInput
 ): Promise<Admin | null> => {
-  const admin = await prisma.admin.update({
-    where: { id },
+  const result = await prisma.admin.update({
+    where: { adminId: id },
     data: payload,
   });
 
-  return admin;
+  if (!result) {
+    throw new ApiError(httpStatus.CONFLICT, 'Sorry, failed to update!');
+  }
+
+  return result;
 };
 
 // Delete an admin by ID
 const deleteByIdFromDB = async (id: string): Promise<Admin | null> => {
-  const deletedAdmin = await prisma.admin.delete({
-    where: { id },
+  const admin = await prisma.admin.findUnique({
+    where: { adminId: id },
+    include: {
+      user: true, // Include the related user
+    },
   });
 
-  return deletedAdmin;
+  if (!admin) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sorry, the admin does not exist!'
+    );
+  }
+
+  console.log('admin', admin);
+  console.log('user', admin.user);
+  // Step 1: Delete the User record associated with the Admin
+  if (admin.user) {
+    await prisma.user.delete({
+      where: { userId: admin.user.userId },
+    });
+  }
+
+  // Step 2: Delete the Admin record
+  const result = await prisma.admin.delete({
+    where: {
+      adminId: id,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Sorry, failed to delete!');
+  }
+
+  return result;
 };
 
 export const AdminServices = {
