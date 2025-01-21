@@ -12,12 +12,6 @@ const TransactionStatusEnum = z.enum(
 const createTransaction = z.object({
   body: z
     .object({
-      // id: z.string({
-      //   required_error: 'Account ID is required',
-      // }),
-      // userId: z.string({
-      //   required_error: 'User ID is required',
-      // }),
       amount: z
         .number({
           required_error: 'Amount is required',

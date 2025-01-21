@@ -1,4 +1,5 @@
 import {
+  Prisma,
   Transaction,
   TransactionStatus,
   TransactionType,
@@ -22,6 +23,9 @@ const insertIntoDB = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid transaction amount');
   }
 
+  console.log('id....', id);
+  console.log('user id....', userId);
+  console.log('trsaction data....', transactionData);
   // Use a transaction to ensure atomicity
   const result = await prisma.$transaction(async (tx) => {
     const account = await tx.account.update({
@@ -31,6 +35,7 @@ const insertIntoDB = async (
       },
     });
 
+    console.log('account updated', account);
     const transaction = await tx.transaction.create({
       data: {
         memberId: userId,
@@ -42,6 +47,7 @@ const insertIntoDB = async (
       },
     });
 
+    console.log('trasaction created', transaction);
     return transaction;
   });
 
@@ -108,6 +114,45 @@ const updateFromEvent = async (e: TransactionUpdatedEvent): Promise<void> => {
   }
 };
 
+// const getAllFromDB = async (
+//   userId: string,
+//   payload: any
+// ): Promise<IGenericResponse<Transaction[]>> => {
+//   const startDate = new Date(
+//     payload?.df || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+//   );
+//   const endDate = new Date(payload?.dt || new Date());
+
+//   console.log('user ID...', userId);
+//   console.log('payload query data...', payload);
+//   console.log('start date...', startDate);
+//   console.log('end date...', endDate);
+
+//   const result = await prisma.transaction.findMany({
+//     where: {
+//       memberId: userId,
+//       createdAt: { gte: startDate, lte: endDate },
+//       OR: [
+//         { description: { contains: payload?.s, mode: 'insensitive' } },
+//         { status: payload?.s as TransactionStatus },
+//         { source: { contains: payload?.s, mode: 'insensitive' } },
+//       ],
+//     },
+//     orderBy: { createdAt: 'desc' },
+//   });
+
+//   console.log('result....', result);
+
+//   return {
+//     data: result,
+//     meta: {
+//       page: 1,
+//       limit: 10,
+//       total: result.length,
+//     },
+//   };
+// };
+
 const getAllFromDB = async (
   userId: string,
   payload: any
@@ -117,26 +162,46 @@ const getAllFromDB = async (
   );
   const endDate = new Date(payload?.dt || new Date());
 
+  console.log('Parsed Start Date:', startDate);
+  console.log('Parsed End Date:', endDate);
+
+  const searchCondition: Prisma.Enumerable<Prisma.TransactionWhereInput> =
+    payload?.s
+      ? [
+          {
+            description: {
+              contains: payload.s,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          { status: payload.s as TransactionStatus },
+          {
+            source: {
+              contains: payload.s,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+        ]
+      : [];
+
   const result = await prisma.transaction.findMany({
     where: {
       memberId: userId,
       createdAt: { gte: startDate, lte: endDate },
-      OR: [
-        { description: { contains: payload?.s, mode: 'insensitive' } },
-        { status: payload?.s as TransactionStatus },
-        { source: { contains: payload?.s, mode: 'insensitive' } },
-      ],
+      ...(searchCondition.length ? { OR: searchCondition } : {}),
     },
     orderBy: { createdAt: 'desc' },
   });
 
+  console.log('Query Result:', result);
+
   return {
-    data: result,
     meta: {
       page: 1,
       limit: 10,
       total: result.length,
     },
+    data: result,
   };
 };
 
@@ -150,6 +215,8 @@ const transferFundsInsideDB = async (
   }
 
   const transferAmount = Number(amount);
+  console.log('from account', fromAccount, 'to account', toAccount);
+  console.log('amount', amount, 'transfer', transferAmount);
 
   if (isNaN(transferAmount) || transferAmount <= 0) {
     throw new ApiError(
@@ -163,6 +230,7 @@ const transferFundsInsideDB = async (
       where: { id: fromAccount },
     });
 
+    console.log('from account model', fromAccountModel);
     if (!fromAccountModel) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Source account not found.');
     }
@@ -179,13 +247,16 @@ const transferFundsInsideDB = async (
       data: { accountBalance: { increment: amount } },
     });
 
-    await tx.account.update({
+    console.log('to account model', toAccountModel);
+
+    const a = await tx.account.update({
       where: { id: fromAccount },
       data: { accountBalance: { decrement: amount } },
     });
+    console.log('updated from account', a);
 
     const description = `Transfer (${fromAccountModel.accountName} -> ${toAccountModel.accountName})`;
-
+    console.log('description', description);
     const [expenseTransaction, incomeTransaction] = await Promise.all([
       tx.transaction.create({
         data: {
@@ -209,6 +280,10 @@ const transferFundsInsideDB = async (
       }),
     ]);
 
+    console.log('[expenseTransaction, incomeTransaction]', [
+      expenseTransaction,
+      incomeTransaction,
+    ]);
     return [expenseTransaction, incomeTransaction];
   });
 };

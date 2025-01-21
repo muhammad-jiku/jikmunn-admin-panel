@@ -20,7 +20,7 @@ const insertIntoDB = catchAsync(
       sendResponse<Transaction>(res, {
         statusCode: httpStatus.CREATED,
         success: true,
-        message: 'Transaction created successfully!!',
+        message: 'Transaction data created successfully!!',
         data: result,
       });
     } catch (error) {
@@ -65,7 +65,7 @@ const transferFundsInsideDB = catchAsync(
       );
 
       sendResponse<Transaction[]>(res, {
-        statusCode: httpStatus.CREATED,
+        statusCode: httpStatus.OK,
         success: true,
         message: 'Funds transferred successfully!',
         data: result,

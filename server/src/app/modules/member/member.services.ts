@@ -98,6 +98,8 @@ const getDashboardInformation = async (
     _sum: { amount: true },
   });
 
+  console.log('user id...', id);
+  console.log('user transactions data...', transactions);
   const totalIncome =
     transactions.find((t) => t.type === 'INCOME')?._sum.amount || 0;
   const totalExpense =
@@ -138,6 +140,15 @@ const getDashboardInformation = async (
     where: { memberId: id },
     orderBy: { createdAt: 'desc' },
     take: 4,
+  });
+
+  console.log('first returns', {
+    availableBalance,
+    totalIncome,
+    totalExpense,
+    data,
+    lastTransactions,
+    lastAccounts,
   });
 
   return {
