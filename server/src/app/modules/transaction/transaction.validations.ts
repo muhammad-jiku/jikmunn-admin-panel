@@ -10,39 +10,43 @@ const TransactionStatusEnum = z.enum(
 );
 
 const createTransaction = z.object({
-  id: z.string({
-    required_error: 'Account ID is required',
-  }),
-  userId: z.string({
-    required_error: 'User ID is required',
-  }),
-  transactionData: z.object({
-    amount: z
-      .number({
-        required_error: 'Amount is required',
-      })
-      .positive('Amount must be greater than 0'),
-    type: TransactionTypeEnum.default('INCOME'),
-    status: TransactionStatusEnum.default('COMPLETED'),
-    description: z.string().optional(),
-    source: z.string().optional(),
-  }),
+  body: z
+    .object({
+      // id: z.string({
+      //   required_error: 'Account ID is required',
+      // }),
+      // userId: z.string({
+      //   required_error: 'User ID is required',
+      // }),
+      amount: z
+        .number({
+          required_error: 'Amount is required',
+        })
+        .positive('Amount must be greater than 0'),
+      type: TransactionTypeEnum.default('INCOME'),
+      status: TransactionStatusEnum.default('COMPLETED'),
+      description: z.string().optional(),
+      source: z.string().optional(),
+    })
+    .strict(),
 });
 
 const transferFunds = z.object({
-  body: z.object({
-    fromAccount: z.string({
-      required_error: 'Source account ID is required.',
-    }),
-    toAccount: z.string({
-      required_error: 'Destination account ID is required.',
-    }),
-    amount: z
-      .number({
-        required_error: 'Amount is required.',
-      })
-      .positive('Amount must be greater than 0.'),
-  }),
+  body: z
+    .object({
+      fromAccount: z.string({
+        required_error: 'Source account ID is required.',
+      }),
+      toAccount: z.string({
+        required_error: 'Destination account ID is required.',
+      }),
+      amount: z
+        .number({
+          required_error: 'Amount is required.',
+        })
+        .positive('Amount must be greater than 0.'),
+    })
+    .strict(),
 });
 
 export const TransactionValidations = {

@@ -97,7 +97,7 @@ model User {
 model Account {
   id             String   @id @default(uuid())
   memberId       String
-  member         Member   @relation(fields: [memberId], references: [id])
+  member         Member   @relation(fields: [memberId], references: [memberId])
   accountName    String
   accountNumber  String
   accountBalance Float
@@ -110,7 +110,7 @@ model Account {
 model Transaction {
   id          String            @id @default(uuid())
   memberId    String
-  member      Member            @relation(fields: [memberId], references: [id])
+  member      Member            @relation(fields: [memberId], references: [memberId])
   description String
   status      TransactionStatus @default(PENDING) // Enum for status
   source      String

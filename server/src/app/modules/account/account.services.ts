@@ -8,12 +8,26 @@ const insertIntoDB = async (
   userId: string,
   accountData: Account
 ): Promise<Account> => {
-  const existingAccount = await prisma.account.findFirst({
-    where: { memberId: userId, accountName: accountData?.accountName },
+  // Check if the member exists
+  const member = await prisma.member.findUnique({
+    where: { memberId: userId },
   });
 
+  console.log('member exists', member);
+  if (!member) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Member not found!');
+  }
+
+  const existingAccount = await prisma.account.findFirst({
+    where: {
+      memberId: userId,
+      accountName: accountData?.accountName,
+    },
+  });
+
+  console.log('existing account', existingAccount);
   if (existingAccount) {
-    throw new ApiError(httpStatus.CONFLICT, 'Account already exists.');
+    throw new ApiError(httpStatus.CONFLICT, 'Account already exists!');
   }
 
   return await prisma.$transaction(async (tx) => {
@@ -26,9 +40,11 @@ const insertIntoDB = async (
       },
     });
 
+    console.log('account', account);
     const description = `${accountData?.accountName} (Initial Deposit)`;
 
-    await tx.transaction.create({
+    console.log('description', description);
+    const transaction = await tx.transaction.create({
       data: {
         memberId: userId,
         description,
@@ -39,6 +55,8 @@ const insertIntoDB = async (
       },
     });
 
+    console.log('account.....', account);
+    console.log('transaction...', transaction);
     return account;
   });
 };
@@ -84,6 +102,10 @@ const getAllFromDB = async (userId: string): Promise<Account[]> => {
     orderBy: { createdAt: 'desc' },
   });
 
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Sorry, failed to retrieve data!');
+  }
+
   return result;
 };
 
@@ -102,9 +124,10 @@ const insertMoneyIntoDB = async (
       data: { accountBalance: { increment: amount } },
     });
 
+    console.log('account updated', account);
     const description = `${account.accountName} (Deposit)`;
-
-    await tx.transaction.create({
+    console.log('description => ', description);
+    const transaction = await tx.transaction.create({
       data: {
         memberId: userId,
         description,
@@ -115,6 +138,7 @@ const insertMoneyIntoDB = async (
       },
     });
 
+    console.log('transaction completed...', transaction);
     return account;
   });
 };

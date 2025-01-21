@@ -32,7 +32,7 @@ const getAllFromDB = catchAsync(
       sendResponse<Account[]>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Accounts retrieved successfully',
+        message: 'Accounts data retrieved successfully',
         data: result,
       });
     } catch (error) {
@@ -46,18 +46,18 @@ const insertMoneyIntoDB = catchAsync(
     try {
       const user = req.user!;
       const { id } = req.params;
-      const { amount } = await req.body;
+      const { accountBalance } = await req.body;
 
       const result = await AccountServices.insertMoneyIntoDB(
         id,
         user.userId,
-        Number(amount)
+        Number(accountBalance)
       );
 
       sendResponse<Account>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Money added successfully',
+        message: 'Money added to the account successfully!',
         data: result,
       });
     } catch (error) {
